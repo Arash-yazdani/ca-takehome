@@ -1,0 +1,17 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "${API_PORT:-5000}:5000"
+    environment:
+      SEED_TASKS: "${SEED_TASKS:-1}" # 8 example tasks; set to 0 to start empty
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped

@@ -1,0 +1,296 @@
+:root {
+  --orange: #f26419;
+  --orange-hover: #ff7f3f;
+  --navy-deep: #06112e;
+  --navy: #003a70;
+  --page: #ebebeb;
+  --surface: #fafafa;
+  --ink: #151515;
+  --muted: #4d4d4d;
+  --line: #d4d4d4;
+  --danger: #b22222;
+  --sans: "Hanken Grotesk Variable", ui-sans-serif, system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html { scrollbar-gutter: stable; }
+
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--ink);
+  font: 500 1rem/1.4 var(--sans);
+}
+
+button, input { font: inherit; color: inherit; touch-action: manipulation; }
+button:disabled { opacity: 0.5; cursor: progress; }
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; }
+.panel :focus-visible { outline-color: #fff; }
+[aria-disabled="true"] { opacity: 0.5; cursor: progress; }
+
+.panel {
+  margin: 12px 12px 0;
+  border-radius: 24px;
+  overflow: hidden;
+  color: #fff;
+  background: linear-gradient(100deg, var(--navy-deep), var(--navy));
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 10px;
+  padding: 10px 20px;
+  border: 1px solid rgb(255 255 255 / 0.25);
+  border-radius: 9999px;
+  background: rgb(255 255 255 / 0.05);
+}
+
+.brand, .api-state { white-space: nowrap; }
+.brand { display: flex; align-items: center; gap: 10px; margin: 0; font-size: 1.125rem; }
+.brand svg { width: 28px; height: 18px; }
+
+.api-state, .task-status, .stats dt {
+  font-size: 0.875rem;
+  line-height: 1.2;
+}
+.api-state:not(:empty)::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background: #4cd07d;
+}
+.api-state--down::before { background: var(--orange); }
+
+.hero { padding: 8px 16px 0; text-align: center; }
+
+h1 {
+  margin: 0 0 16px;
+  font-size: clamp(2.25rem, 4.5vw, 2.75rem);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.add { max-width: 620px; margin: 0 auto; }
+.add-row { display: flex; gap: 8px; }
+.add input {
+  flex: 1;
+  min-width: 0;
+  padding: 12px 20px;
+  color: #fff;
+  border: 1px solid rgb(255 255 255 / 0.5);
+  border-radius: 9999px;
+  background: rgb(255 255 255 / 0.08);
+}
+.add input::placeholder { color: rgb(255 255 255 / 0.7); }
+.add-field { display: block; margin-bottom: 8px; text-align: left; padding-left: 20px; font-size: 0.875rem; color: rgb(255 255 255 / 0.9); }
+.add-error { min-height: 1.4em; margin: 8px 0 0; color: #ffc9a8; }
+
+.cta, .primary {
+  background: var(--orange);
+  border: 1px solid var(--orange);
+  color: var(--ink);
+}
+.cta {
+  padding: 12px 22px;
+  border-radius: 9999px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.cta:hover { background: var(--orange-hover); }
+.cta:disabled { opacity: 0.6; cursor: progress; }
+
+/* The statistics sit on the planet, below the arc. */
+.horizon { position: relative; }
+.horizon-arc { position: relative; }
+/* NASA Blue Marble, public domain. The overlay keeps the statistics readable. */
+.planet {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, rgb(2 8 24 / 0.8), transparent 62%),
+    linear-gradient(transparent 25%, rgb(4 22 47 / 0.62) 70%),
+    url("/earth.jpg") center / 100% 100%;
+  clip-path: url(#planet-clip);
+}
+/* The glow sits on a parent, because a filter on the clipped element would be cut off by its own clip. */
+.atmosphere {
+  position: absolute;
+  inset: 0;
+  filter: drop-shadow(0 -2px 6px rgb(130 200 255 / 0.9)) drop-shadow(0 -6px 22px rgb(60 150 255 / 0.65));
+  /* Sunlit side: the glow is strongest near the sun and fades into the night side. */
+  mask-image: linear-gradient(to right, rgb(0 0 0 / 0.15), #000 78%, rgb(0 0 0 / 0.6));
+}
+/* The sun rising over the limb, placed on the curve at 78% across. */
+.sun {
+  position: absolute;
+  left: 78%;
+  top: 53%;
+  width: 380px;
+  height: 380px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, #fff 0 2%, rgb(255 240 210 / 0.9) 5%, rgb(255 190 120 / 0.35) 16%, rgb(120 180 255 / 0.12) 38%, transparent 68%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+.sun::after {
+  content: "";
+  position: absolute;
+  left: 20%;
+  right: 20%;
+  top: 50%;
+  height: 2px;
+  background: linear-gradient(to right, transparent, rgb(255 235 205 / 0.8), transparent);
+}
+.horizon svg { position: relative; display: block; width: 100%; height: clamp(105px, 13vw, 155px); }
+.arc-track, .arc-fill { fill: none; stroke-linecap: round; }
+.arc-track { stroke: rgb(190 225 255 / 0.75); stroke-width: 1.5; }
+.arc-fill {
+  stroke: var(--orange);
+  stroke-width: 4;
+  filter: drop-shadow(0 0 8px rgb(242 100 25 / 0.8));
+}
+.arc-tip {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  margin: -6px 0 0 -6px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 0 3px var(--orange), 0 0 12px 3px rgb(242 100 25 / 0.8);
+}
+
+.stats {
+  position: absolute;
+  inset: auto 0 8px;
+  display: flex;
+  justify-content: center;
+  gap: clamp(24px, 7vw, 80px);
+  margin: 0;
+  text-align: center;
+}
+.stats dt { color: rgb(255 255 255 / 0.85); }
+.stats dd {
+  margin: 4px 0 0;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.tasks { max-width: 880px; margin: 0 auto; padding: 28px 16px 64px; }
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.filters { display: flex; gap: 4px; padding: 4px; border-radius: 9999px; background: #dcdcdc; }
+.filters button {
+  min-height: 36px;
+  padding: 6px 16px;
+  border: 0;
+  border-radius: 9999px;
+  background: none;
+  cursor: pointer;
+}
+.filters button[aria-pressed="true"] { background: var(--ink); color: #fff; }
+.search {
+  flex: 0 1 260px;
+  min-width: 0;
+  padding: 8px 16px;
+  border: 1px solid #767676;
+  border-radius: 9999px;
+  background: var(--surface);
+}
+.search::placeholder { color: var(--muted); }
+
+/* Room for 10 rows (65px each), so searching and filtering do not move the page. */
+.list-area { min-height: 650px; border-radius: 16px; background: var(--surface); }
+.list { margin: 0; padding: 0; list-style: none; }
+
+.task {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  padding: 14px 20px;
+}
+.task + .task { border-top: 1px solid var(--line); }
+.task-title { flex: 1 1 220px; min-width: 0; overflow-wrap: anywhere; }
+.task--done .task-title { color: var(--muted); text-decoration: line-through; }
+.task-status { width: 90px; color: var(--muted); }
+.confirm-text { color: var(--danger); align-self: center; font-size: 0.875rem; }
+.task--done .task-status { color: #1f7a45; }
+
+.actions { display: flex; gap: 6px; }
+.actions button {
+  min-height: 36px;
+  padding: 5px 14px;
+  border: 1px solid var(--line);
+  border-radius: 9999px;
+  background: none;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+.actions button:hover { border-color: var(--ink); }
+.actions .primary { background: var(--orange); border-color: var(--orange); }
+.actions .primary:hover { background: var(--orange-hover); border-color: var(--orange-hover); }
+.actions .danger { color: var(--danger); }
+.actions .danger:hover { border-color: var(--danger); }
+
+.edit-error { flex-basis: 100%; margin: 0; color: var(--danger); font-size: 0.875rem; }
+.edit { display: flex; flex: 1; flex-wrap: wrap; gap: 8px; }
+.edit input {
+  flex: 1 1 220px;
+  min-width: 0;
+  padding: 5px 12px;
+  border: 1px solid var(--ink);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.empty { margin: 0; padding: 40px 20px; text-align: center; color: var(--muted); }
+
+.banner {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0 0 16px;
+  padding: 10px 16px;
+  border-left: 4px solid var(--orange);
+  border-radius: 8px;
+  background: #fff;
+}
+.link { padding: 0; border: 0; background: none; text-decoration: underline; cursor: pointer; }
+
+@media (max-width: 560px) {
+  .nav { padding: 10px 12px; }
+  .sun { width: 240px; height: 240px; }
+  .brand { font-size: 1rem; gap: 8px; }
+  .api-state { font-size: 0.75rem; }
+  .hero { padding-top: 24px; }
+  .add-row { flex-direction: column; }
+  .task-status { width: auto; }
+  .actions { flex-wrap: wrap; }
+  .actions button, .filters button, .search, .edit input { min-height: 44px; }
+  /* A phone-width curve is too steep to hold text, so the statistics move below it. */
+  .horizon svg { height: 80px; }
+  .stats { position: static; padding: 12px 0 20px; background: #04162f; }
+}

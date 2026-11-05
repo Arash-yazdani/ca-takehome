@@ -1,5 +1,7 @@
 # Task Manager
 
+![Task Manager screenshot](docs/screenshot.png)
+
 A task manager with a Flask API, a React frontend and Docker Compose.
 
 ## Build and run
